@@ -218,8 +218,8 @@ class AuthControllerTest {
         }
 
         @Test
-        @DisplayName("Should throw an exception when user credentials incorrect")
-        void givenInvalidUserCredentials_whenLogin_thenThrowsException() {
+        @DisplayName("Should return UNAUTHORIZED when user credentials incorrect")
+        void givenInvalidUserCredentials_whenLogin_thenReturnsUnauthorized() {
             // Given
             var request = new LoginRequest(
                     "TEST@EMAIL",
@@ -277,8 +277,8 @@ class AuthControllerTest {
         }
 
         @Test
-        @DisplayName("Should throw an exception when refresh token does not exist")
-        void givenInvalidRefreshToken_whenRefresh_thenThrowsException() {
+        @DisplayName("Should return UNAUTHORIZED when refresh token does not exist")
+        void givenInvalidRefreshToken_whenRefresh_thenReturnsUnauthorized() {
             // Given
             var request = new RefreshTokenRequest("INVALID_TOKEN");
 
