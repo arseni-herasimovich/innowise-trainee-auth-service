@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<UserResponse>> saveCredentials(@RequestBody @Valid SignupRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> saveCredentials(@Valid @RequestBody SignupRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success("User successfully signed up", authService.signup(request)));
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<ApiResponse<Boolean>> validateToken(@RequestBody ValidateTokenRequest request) {
+    public ResponseEntity<ApiResponse<Boolean>> validateToken(@Valid @RequestBody ValidateTokenRequest request) {
         return ResponseEntity.ok(
                 ApiResponse.success("Token validated", authService.validate(request))
         );
