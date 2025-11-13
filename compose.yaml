@@ -1,0 +1,41 @@
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: innowise/internship/auth-service
+    ports:
+      - '8082:8080'
+    depends_on:
+      - auth-service-db
+    networks:
+      - backend-net
+      - auth-service-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DB_HOST=auth-service-db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+
+  auth-service-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - auth-service-net
+    volumes:
+      - auth-service-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  auth-service-postgres-data: {}
+
+networks:
+  backend-net:
+    external: true
+  auth-service-net:
+    driver: bridge
