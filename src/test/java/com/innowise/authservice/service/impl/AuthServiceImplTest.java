@@ -339,4 +339,39 @@ class AuthServiceImplTest {
 
         verify(tokenService, times(1)).validate(request.token());
     }
+
+    @Test
+    @DisplayName("Should delete user when valid id provided")
+    void givenValidId_whenDelete_thenReturnsTrue() {
+        // Given
+        var id = UUID.randomUUID();
+        var user = new User();
+
+        // When
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+        var response = authService.delete(id);
+
+        // Then
+        assertTrue(response);
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).delete(user);
+    }
+
+    @Test
+    @DisplayName("Should return false when user does not exist")
+    void givenNotExistingId_whenDelete_thenReturnsFalse() {
+        // Given
+        var id = UUID.randomUUID();
+
+        // When
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        var response = authService.delete(id);
+
+        // Then
+        assertFalse(response);
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, never()).delete(any());
+    }
 }

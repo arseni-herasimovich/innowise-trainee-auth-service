@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * Implementation of AuthService that handles authentication-related operations.
@@ -82,5 +83,15 @@ public class AuthServiceImpl implements AuthService {
     public Boolean validate(ValidateTokenRequest request) {
         log.debug("Validating token");
         return tokenService.validate(request.token()) && tokenService.isAccessToken(request.token());
+    }
+
+    @Override
+    public Boolean delete(UUID id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    userRepository.delete(user);
+                    return true;
+                })
+                .orElse(false);
     }
 }

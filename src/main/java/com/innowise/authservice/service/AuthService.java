@@ -2,6 +2,8 @@ package com.innowise.authservice.service;
 
 import com.innowise.authservice.dto.*;
 
+import java.util.UUID;
+
 /**
  * Service interface for handling authentication-related operations.
  * Provides methods for user signup, login, token refresh, and token validation.
@@ -38,4 +40,12 @@ public interface AuthService {
      * @return true if the token is valid, false otherwise
      */
     Boolean validate(ValidateTokenRequest request);
+
+    /**
+     * Deletes a user from the system.
+     *
+     * @param id the ID of the user to delete
+     * @return true if the user was deleted successfully, false otherwise
+     */
+    Boolean delete(UUID id);
 }
