@@ -18,11 +18,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<UserResponse>> saveCredentials(@Valid @RequestBody SignupRequest request) {
+    @PostMapping("/credentials")
+    public ResponseEntity<ApiResponse<CredentialsResponse>> saveCredentials(@Valid @RequestBody SaveCredentialsRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.success("User successfully signed up", authService.signup(request)));
+                .body(ApiResponse.success("User successfully signed up", authService.saveCredentials(request)));
     }
 
     @PostMapping("/login")

@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenService tokenService;
 
     @Override
-    public UserResponse signup(SignupRequest request) {
+    public CredentialsResponse saveCredentials(SaveCredentialsRequest request) {
         log.debug("Signing up user with id: {}", request.id());
         if (userRepository.existsByEmail(request.email())) {
             throw new UserAlreadyExistsException(request.email());

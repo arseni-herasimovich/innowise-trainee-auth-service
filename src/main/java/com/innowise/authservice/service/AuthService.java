@@ -13,7 +13,7 @@ public interface AuthService {
      * @param request the signup request containing user details
      * @return the created user response with user information
      */
-    UserResponse signup(SignupRequest request);
+    CredentialsResponse saveCredentials(SaveCredentialsRequest request);
 
     /**
      * Authenticates a user and generates access and refresh tokens.

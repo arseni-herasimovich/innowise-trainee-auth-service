@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 import java.util.UUID;
 
-public record SignupRequest(
+public record SaveCredentialsRequest(
         @NotNull(message = "ID is required")
         UUID id,
 

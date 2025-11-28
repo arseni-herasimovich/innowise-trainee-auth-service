@@ -1,7 +1,7 @@
 package com.innowise.authservice.mapper;
 
-import com.innowise.authservice.dto.SignupRequest;
-import com.innowise.authservice.dto.UserResponse;
+import com.innowise.authservice.dto.SaveCredentialsRequest;
+import com.innowise.authservice.dto.CredentialsResponse;
 import com.innowise.authservice.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +13,7 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "role", ignore = true)
-    User toUser(SignupRequest request);
+    User toUser(SaveCredentialsRequest request);
 
-    UserResponse toUserResponse(User user);
+    CredentialsResponse toUserResponse(User user);
 }
