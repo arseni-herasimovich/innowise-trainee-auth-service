@@ -45,66 +45,52 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<ApiResponse<?>> handleHandlerMethodValidationException(HandlerMethodValidationException ex) {
         var errors = ex.getAllErrors().stream()
-                .map(MessageSourceResolvable::getDefaultMessage)
-                .toList();
+                .map(MessageSourceResolvable::getDefaultMessage).toList();
         log.debug("Validation failed for method arguments. Errors: {}", errors);
         return ResponseEntity
-                .badRequest()
-                .body(ApiResponse.error("Validation failed for method arguments", errors));
+                .badRequest().body(ApiResponse.error("Validation failed for method arguments", errors));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String message = String.format(
                 "Invalid value for parameter '%s'. Expected type: %s",
-                ex.getName(),
-                ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown"
+                ex.getName(), ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown"
         );
         log.debug(message);
         return ResponseEntity
-                .badRequest()
-                .body(ApiResponse.error(message));
+                .badRequest().body(ApiResponse.error(message));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse<Void>> handleMethodNotSupportedException(
             HttpRequestMethodNotSupportedException e) {
         log.debug("Method {} not allowed. Allowed methods: {}", e.getMethod(), e.getSupportedMethods());
-        return ResponseEntity
-                .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(ApiResponse.error("Method not allowed"));
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(ApiResponse.error("Method not allowed"));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleNoResourceFoundException(NoResourceFoundException e) {
         log.debug("Handler {} not found.", e.getResourcePath());
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.error("Endpoint not found"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Endpoint not found"));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
         log.debug("Cannot read request body: {}", e.getMessage());
-        return ResponseEntity
-                .badRequest()
-                .body(ApiResponse.error("Invalid request body"));
+        return ResponseEntity.badRequest().body(ApiResponse.error("Invalid request body"));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiResponse<Void>> handleMissingRequestParameter(MissingServletRequestParameterException e) {
         log.debug("Required parameter is missing: {}", e.getParameterName());
-        return ResponseEntity
-                .badRequest()
-                .body(ApiResponse.error("Parameter is missing: " + e.getParameterName()));
+        return ResponseEntity.badRequest().body(ApiResponse.error("Parameter is missing: " + e.getParameterName()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneralException(Exception e) {
         log.error("Exception occurred: {}. Message: {}", e.getClass(), e.getMessage());
         log.debug("Exception:", e);
-        return ResponseEntity
-                .internalServerError()
-                .body(ApiResponse.error("Internal server error"));
+        return ResponseEntity.internalServerError().body(ApiResponse.error("Internal server error"));
     }
 }

@@ -49,7 +49,7 @@ class AuthServiceImplTest {
     @DisplayName("Should sign up when user does not exist")
     void givenNotExistingUser_whenSignup_thenSavesUser() {
         // Given
-        var request = new SignupRequest(
+        var request = new SaveCredentialsRequest(
                 UUID.randomUUID(),
                 "TEST@EMAIL",
                 "PASSWORD"
@@ -60,7 +60,7 @@ class AuthServiceImplTest {
         user.setEmail(request.email());
         user.setRole("ROLE_USER");
 
-        var userResponse = new UserResponse(
+        var userResponse = new CredentialsResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getRole(),
@@ -76,7 +76,7 @@ class AuthServiceImplTest {
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toUserResponse(user)).thenReturn(userResponse);
 
-        var response = authService.signup(request);
+        var response = authService.saveCredentials(request);
 
         // Then
         assertEquals("HASHED_PASSWORD", user.getPassword());
@@ -97,7 +97,7 @@ class AuthServiceImplTest {
     @DisplayName("Should throw an exception when user email exists")
     void givenExistingUserEmail_whenSignup_thenThrowsException() {
         // Given
-        var request = new SignupRequest(
+        var request = new SaveCredentialsRequest(
                 UUID.randomUUID(),
                 "TEST@EMAIL",
                 "PASSWORD"
@@ -106,7 +106,7 @@ class AuthServiceImplTest {
         // When
         when(userRepository.existsByEmail(request.email())).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class, () -> authService.signup(request));
+        assertThrows(UserAlreadyExistsException.class, () -> authService.saveCredentials(request));
         verify(userRepository, times(1)).existsByEmail(request.email());
         verify(userRepository, never()).existsById(any());
         verify(userMapper, never()).toUser(any());
@@ -119,7 +119,7 @@ class AuthServiceImplTest {
     @DisplayName("Should throw an exception when user id exists")
     void givenExistingUserId_whenSignup_thenThrowsException() {
         // Given
-        var request = new SignupRequest(
+        var request = new SaveCredentialsRequest(
                 UUID.randomUUID(),
                 "TEST@EMAIL",
                 "PASSWORD"
@@ -130,7 +130,7 @@ class AuthServiceImplTest {
         when(userRepository.existsById(request.id())).thenReturn(true);
 
         // Then
-        assertThrows(UserAlreadyExistsException.class, () -> authService.signup(request));
+        assertThrows(UserAlreadyExistsException.class, () -> authService.saveCredentials(request));
 
         verify(userRepository, times(1)).existsByEmail(request.email());
         verify(userRepository, times(1)).existsById(request.id());
@@ -338,5 +338,40 @@ class AuthServiceImplTest {
         assertFalse(response);
 
         verify(tokenService, times(1)).validate(request.token());
+    }
+
+    @Test
+    @DisplayName("Should delete user when valid id provided")
+    void givenValidId_whenDelete_thenReturnsTrue() {
+        // Given
+        var id = UUID.randomUUID();
+        var user = new User();
+
+        // When
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+        var response = authService.delete(id);
+
+        // Then
+        assertTrue(response);
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).delete(user);
+    }
+
+    @Test
+    @DisplayName("Should return false when user does not exist")
+    void givenNotExistingId_whenDelete_thenReturnsFalse() {
+        // Given
+        var id = UUID.randomUUID();
+
+        // When
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        var response = authService.delete(id);
+
+        // Then
+        assertFalse(response);
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, never()).delete(any());
     }
 }

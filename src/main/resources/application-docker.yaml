@@ -5,8 +5,8 @@ spring:
     password: ${DB_PASSWORD}
 logging:
   level:
-    com.innowise: info
+    com.innowise: ${APP_LOGGING_LEVEL:info}
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/

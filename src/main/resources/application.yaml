@@ -12,3 +12,10 @@ spring:
       access-token-ttl: ${ACCESS_TOKEN_TTL:900}
       refresh-token-ttl: ${REFRESH_TOKEN_TTL:604800}
       refresh-token-cleaner-cron: 0 0 0 * * *
+  autoconfigure:
+    exclude:
+      - net.devh.boot.grpc.server.autoconfigure.GrpcServerSecurityAutoConfiguration
+eureka:
+  instance:
+    metadata-map:
+      grpc.port: 9090

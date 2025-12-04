@@ -72,7 +72,7 @@ class AuthControllerTest {
         @DisplayName("Should sign up when user does not exist")
         void givenNotExistingUser_whenSignup_thenReturnsUserResponse() {
             // Given
-            var request = new SignupRequest(
+            var request = new SaveCredentialsRequest(
                     UUID.randomUUID(),
                     "NEW@EMAIL",
                     "Password1"
@@ -83,7 +83,7 @@ class AuthControllerTest {
                     URI.SIGNUP,
                     HttpMethod.POST,
                     new HttpEntity<>(request),
-                    new ParameterizedTypeReference<ApiResponse<UserResponse>>() {
+                    new ParameterizedTypeReference<ApiResponse<CredentialsResponse>>() {
                     }
             );
 
@@ -103,7 +103,7 @@ class AuthControllerTest {
             // Given
             var signupRequest = registerUser();
 
-            var request = new SignupRequest(
+            var request = new SaveCredentialsRequest(
                     UUID.randomUUID(),
                     signupRequest.email(),
                     "Password1"
@@ -114,7 +114,7 @@ class AuthControllerTest {
                     URI.SIGNUP,
                     HttpMethod.POST,
                     new HttpEntity<>(request),
-                    new ParameterizedTypeReference<ApiResponse<UserResponse>>() {
+                    new ParameterizedTypeReference<ApiResponse<CredentialsResponse>>() {
                     }
             );
 
@@ -131,7 +131,7 @@ class AuthControllerTest {
             // Given
             var signupRequest = registerUser();
 
-            var request = new SignupRequest(
+            var request = new SaveCredentialsRequest(
                     signupRequest.id(),
                     "TEST@EMAIL",
                     "Password1"
@@ -142,7 +142,7 @@ class AuthControllerTest {
                     URI.SIGNUP,
                     HttpMethod.POST,
                     new HttpEntity<>(request),
-                    new ParameterizedTypeReference<ApiResponse<UserResponse>>() {
+                    new ParameterizedTypeReference<ApiResponse<CredentialsResponse>>() {
                     }
             );
 
@@ -353,18 +353,18 @@ class AuthControllerTest {
         }
     }
 
-    private SignupRequest registerUser() {
-        SignupRequest request = new SignupRequest(
+    private SaveCredentialsRequest registerUser() {
+        SaveCredentialsRequest request = new SaveCredentialsRequest(
                 UUID.randomUUID(),
                 "TEST@EMAIL",
                 "Password1"
         );
-        authService.signup(request);
+        authService.saveCredentials(request);
         return request;
     }
 
     private static class URI {
-        private static final String SIGNUP = "/api/v1/auth/signup";
+        private static final String SIGNUP = "/api/v1/auth/credentials";
         private static final String LOGIN = "/api/v1/auth/login";
         private static final String REFRESH = "/api/v1/auth/refresh";
         private static final String VALIDATE = "/api/v1/auth/validate";

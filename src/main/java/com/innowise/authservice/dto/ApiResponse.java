@@ -15,14 +15,6 @@ public class ApiResponse<T> {
     private T data;
     private Instant timestamp;
 
-    public static <T> ApiResponse<T> success(String message) {
-        return ApiResponse.<T>builder()
-                .success(true)
-                .message(message)
-                .timestamp(Instant.now())
-                .build();
-    }
-
     public static <T> ApiResponse<T> success(String message, T data) {
         return ApiResponse.<T>builder()
                 .success(true)

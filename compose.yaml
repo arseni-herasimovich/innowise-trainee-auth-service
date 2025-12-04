@@ -3,9 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: innowise/internship/auth-service
-    ports:
-      - '8082:8080'
+    image: arseniherasimovichinnowise/auth-service
     depends_on:
       - auth-service-db
     networks:
