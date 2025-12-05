@@ -25,8 +25,8 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public AuthResponse generateAuthResponse(User user) {
-        var access = jwtTokenProvider.generateAccessToken(user.getId(), Map.of("role", user.getRole()));
-        var refresh = jwtTokenProvider.generateRefreshToken(user.getId());
+        var access = jwtTokenProvider.generateAccessToken(user.getUserId(), Map.of("role", user.getRole()));
+        var refresh = jwtTokenProvider.generateRefreshToken(user.getUserId());
         saveRefreshToken(refresh, user);
         return new AuthResponse(access, refresh);
     }
