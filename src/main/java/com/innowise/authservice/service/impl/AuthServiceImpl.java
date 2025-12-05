@@ -33,20 +33,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public CredentialsResponse saveCredentials(SaveCredentialsRequest request) {
-        log.debug("Signing up user with id: {}", request.id());
+        log.debug("Signing up user with email: {}", request.email());
         if (userRepository.existsByEmail(request.email())) {
             throw new UserAlreadyExistsException(request.email());
-        }
-
-        if (userRepository.existsById(request.id())) {
-            throw new UserAlreadyExistsException(request.id());
         }
 
         var user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.password()));
 
         var savedUser = userRepository.save(user);
-        log.debug("User with id: {} signed up successfully", request.id());
+        log.debug("User with email: {} signed up successfully", savedUser.getEmail());
         return userMapper.toUserResponse(savedUser);
     }
 
@@ -86,8 +82,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Boolean delete(UUID id) {
-        return userRepository.findById(id)
+    public Boolean delete(UUID userId) {
+        return userRepository.findByUserId(userId)
                 .map(user -> {
                     userRepository.delete(user);
                     return true;

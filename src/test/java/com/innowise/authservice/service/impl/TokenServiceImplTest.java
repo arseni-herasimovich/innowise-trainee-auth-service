@@ -37,12 +37,12 @@ class TokenServiceImplTest {
     void givenUser_whenGenerateAuthResponse_thenReturnsAuthResponse() {
         // Given
         var user = new User();
-        user.setId(UUID.randomUUID());
         user.setRole("ROLE_USER");
+        user.setUserId(UUID.randomUUID());
 
         // When
-        when(jwtTokenProvider.generateAccessToken(eq(user.getId()), any())).thenReturn("ACCESS");
-        when(jwtTokenProvider.generateRefreshToken(user.getId())).thenReturn("REFRESH");
+        when(jwtTokenProvider.generateAccessToken(eq(user.getUserId()), any())).thenReturn("ACCESS");
+        when(jwtTokenProvider.generateRefreshToken(user.getUserId())).thenReturn("REFRESH");
 
         var response = tokenService.generateAuthResponse(user);
 
@@ -50,8 +50,8 @@ class TokenServiceImplTest {
         assertEquals("ACCESS", response.accessToken());
         assertEquals("REFRESH", response.refreshToken());
 
-        verify(jwtTokenProvider, times(1)).generateAccessToken(eq(user.getId()), any());
-        verify(jwtTokenProvider, times(1)).generateRefreshToken(user.getId());
+        verify(jwtTokenProvider, times(1)).generateAccessToken(eq(user.getUserId()), any());
+        verify(jwtTokenProvider, times(1)).generateRefreshToken(user.getUserId());
         verify(refreshTokenRepository, times(1)).save(any());
         verify(tokenService, times(1)).hashToken("REFRESH");
     }

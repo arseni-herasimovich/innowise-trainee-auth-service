@@ -32,7 +32,7 @@ public class AuthGrpcServiceTest {
         var userId = UUID.randomUUID();
 
         var request = Auth.DeleteUserRequest.newBuilder()
-                .setId(userId.toString())
+                .setUserId(userId.toString())
                 .build();
 
         // When
@@ -51,13 +51,33 @@ public class AuthGrpcServiceTest {
     }
 
     @Test
+    @DisplayName("Should return error when user ID in invalid format")
+    void givenInvalidUserId_whenDeleteUser_thenReturnsStatusInvalidArgument() {
+        // Given
+        var userId = "invalid-user-id";
+
+        var request = Auth.DeleteUserRequest.newBuilder()
+                .setUserId(userId)
+                .build();
+
+        // When
+        authGrpcService.deleteUser(request, responseObserver);
+
+        // Then
+        verify(authService, never()).delete(any());
+        verify(responseObserver, times(1)).onError(any());
+        verify(responseObserver, never()).onNext(any());
+        verify(responseObserver, never()).onCompleted();
+    }
+
+    @Test
     @DisplayName("Should return error when exception occurred")
     void givenException_whenDeleteUser_thenReturnsStatusUnknown() {
         // Given
         var userId = UUID.randomUUID();
 
         var request = Auth.DeleteUserRequest.newBuilder()
-                .setId(userId.toString())
+                .setUserId(userId.toString())
                 .build();
 
         // When

@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record CredentialsResponse(
-        UUID id,
+        UUID userId,
         String email,
         String role,
         Instant createdAt,

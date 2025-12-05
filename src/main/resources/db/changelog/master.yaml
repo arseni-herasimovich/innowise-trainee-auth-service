@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/init/2025-11-03-create-users-table.yaml
   - include:
       file: db/changelog/init/2025-11-07-create-refresh-tokens-table.yaml
+  - include:
+      file: db/changelog/updates/2025-12-03-add-user-id-column-users-table.yaml

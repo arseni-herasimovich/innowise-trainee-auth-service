@@ -1,13 +1,11 @@
 package com.innowise.authservice.dto;
 
-import jakarta.validation.constraints.*;
-
-import java.util.UUID;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record SaveCredentialsRequest(
-        @NotNull(message = "ID is required")
-        UUID id,
-
         @NotBlank(message = "Email is required")
         @Email(message = "Email should be valid")
         @Size(max = 255)

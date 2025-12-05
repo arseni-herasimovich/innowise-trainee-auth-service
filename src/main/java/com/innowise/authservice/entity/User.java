@@ -1,9 +1,6 @@
 package com.innowise.authservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,7 +16,11 @@ import java.util.UUID;
 @Setter
 public class User {
     @Id
+    @GeneratedValue
     private UUID id;
+
+    @Column(name = "user_id", nullable = false, unique = true)
+    private UUID userId;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -37,6 +38,13 @@ public class User {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @PrePersist
+    public void generateUserId() {
+        if (userId == null) {
+            userId = UUID.randomUUID();
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

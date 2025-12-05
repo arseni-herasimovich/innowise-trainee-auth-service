@@ -23,7 +23,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Map;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,7 +72,6 @@ class AuthControllerTest {
         void givenNotExistingUser_whenSignup_thenReturnsUserResponse() {
             // Given
             var request = new SaveCredentialsRequest(
-                    UUID.randomUUID(),
                     "NEW@EMAIL",
                     "Password1"
             );
@@ -93,7 +91,6 @@ class AuthControllerTest {
             assertTrue(response.getBody().isSuccess());
             assertNotNull(response.getBody().getData());
 
-            assertEquals(request.id(), response.getBody().getData().id());
             assertEquals(request.email(), response.getBody().getData().email());
         }
 
@@ -104,7 +101,6 @@ class AuthControllerTest {
             var signupRequest = registerUser();
 
             var request = new SaveCredentialsRequest(
-                    UUID.randomUUID(),
                     signupRequest.email(),
                     "Password1"
             );
@@ -132,8 +128,7 @@ class AuthControllerTest {
             var signupRequest = registerUser();
 
             var request = new SaveCredentialsRequest(
-                    signupRequest.id(),
-                    "TEST@EMAIL",
+                    signupRequest.email(),
                     "Password1"
             );
 
@@ -154,11 +149,10 @@ class AuthControllerTest {
         }
 
         @Test
-        @DisplayName("Should return BAD REQUEST when request is invalid")
+        @DisplayName("Should return BAD REQUEST when validation failed")
         void givenInvalidRequest_whenSignup_thenReturnsBadRequest() {
             // Given
             var request = Map.of(
-                    "id", UUID.randomUUID(),
                     "email", "TEST",
                     "password", "1"
             );
@@ -191,7 +185,7 @@ class AuthControllerTest {
 
             var request = new LoginRequest(
                     signupRequest.email(),
-                    "Password1"
+                    signupRequest.password()
             );
 
             // When
@@ -355,7 +349,6 @@ class AuthControllerTest {
 
     private SaveCredentialsRequest registerUser() {
         SaveCredentialsRequest request = new SaveCredentialsRequest(
-                UUID.randomUUID(),
                 "TEST@EMAIL",
                 "Password1"
         );
