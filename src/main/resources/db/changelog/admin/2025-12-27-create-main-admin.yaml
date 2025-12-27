@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-main-admin
+      author: arseni-herasimovich
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: gen_random_uuid()
+              - column:
+                  name: user_id
+                  valueComputed: gen_random_uuid()
+              - column:
+                  name: email
+                  value: admin@admin.com
+              - column:
+                  name: password
+                  value: $2a$10$n3REbljIZ.a85XEMvQBu5.tLcRAJYuRm7M93acteOJ7nJ2mH8Ruha
+              - column:
+                  name: role
+                  value: ROLE_ADMIN
+              - column:
+                  name: created_at
+                  valueComputed: now()
+              - column:
+                  name: updated_at
+                  valueComputed: now()
